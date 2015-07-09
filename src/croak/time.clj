@@ -26,9 +26,11 @@
   ([delay]
    (next-aligned-time (time/now) delay))
   ([t delay]
-   (-> t
-       coerce/to-long
-       (quot delay)
-       (* delay)
-       (+ delay)
-       coerce/from-long)))
+   (let [lt (coerce/to-long t)]
+     (if (= 0 (rem lt delay))
+       t
+       (-> lt
+           (quot delay)
+           (* delay)
+           (+ delay)
+           coerce/from-long)))))
