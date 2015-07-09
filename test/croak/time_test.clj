@@ -4,7 +4,7 @@
             [clj-time.coerce :as coerce]
             [clj-time.core :as time]))
 
-(deftest a-test
+(deftest aligned-time
   (testing "next-aligned-time aligns a time and delay correctly"
     (is
      ;; round to 500ms
