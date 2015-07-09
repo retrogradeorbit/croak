@@ -31,8 +31,7 @@ disk/memory.
 Because this is still under development, here are some ways to
 call the functions.
 
-```
-#!clojure
+```clojure
 
 croak.probes.iptables> (clojure.pprint/pprint (iptables))
 {:INPUT
