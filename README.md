@@ -25,3 +25,40 @@ using some method, like an HTTP POST, or a series of UDP packets. It
 may use multiple methods and multiple hosts. When the information
 has been reliably transfered to all recipients, it is removed from
 disk/memory.
+
+## Scratchpad
+
+Because this is still under development, here are some ways to
+call the functions.
+
+```
+croak.probes.iptables> (clojure.pprint/pprint (iptables))
+{:INPUT
+ {:policy :ACCEPT,
+  :pkts 844,
+  :bytes 217134,
+  :rules
+  ( {:pkts 0,
+    :extra "tcp dpt:53",
+    :source "0.0.0.0/0",
+    :out "*",
+    :prot "tcp",
+    :bytes 0,
+    :target :ACCEPT,
+    :dest "0.0.0.0/0",
+    :in "lxcbr0",
+    :opt "--"}
+   {:pkts 0,
+    :extra "udp dpt:53",
+    :source "0.0.0.0/0",
+    :out "*",
+    :prot "udp",
+    :bytes 0,
+    :target :ACCEPT,
+    :dest "0.0.0.0/0",
+    :in "lxcbr0",
+    :opt "--"}
+   ...
+nil
+
+```
