@@ -16,7 +16,7 @@
        (time/interval t)
        time/in-millis)))
 
-(defn wait-for
+(defn wait-until
   "Sleep the present thread until the passed in date time arrives"
   [^org.joda.time.DateTime t]
   (-> t millis-until sleep))
