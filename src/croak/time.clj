@@ -4,7 +4,7 @@
             [clj-time.coerce :as coerce]))
 
 (defn sleep
-  [millis]
+  [delay]
   (Thread/sleep delay))
 
 (defn millis-until
