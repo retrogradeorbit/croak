@@ -8,4 +8,20 @@ gather system information at regular intervals reliably, and report
 that to a remote system. It is designed to handle network outages
 gracefully and to not loose data. It is not a server, it doesn't make
 graphs and it doesn't send alerts. Instead it is intended to work with
-other systrems that do these things.
+other systems that do these things.
+
+Croak has three components. The prober, the archiver and the reporter.
+The prober, at various intervals, collects various system metrics by
+running various programmes, does some optional processing on them,
+and stores that information in memory.
+
+The archiver watches that ram storage, and when it gets above a
+definable amount, it archives that information to storage on disk.
+It does this repeatedly, paging memory out to successive files.
+
+The reporter tries to take this stored data on disk and in ram and
+tries to verifiably report this information to some remote system
+using some method, like an HTTP POST, or a series of UDP packets. It
+may use multiple methods and multiple hosts. When the information
+has been reliably transfered to all recipients, it is removed from
+disk/memory.
