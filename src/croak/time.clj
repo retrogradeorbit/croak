@@ -9,11 +9,12 @@
 
 (defn millis-until
   "Number of milliseconds until a particular datetime arrives"
-  [^org.joda.time.DateTime t]
-  (let [start (time/now)]
-    (-> start
-        (time/interval t)
-        time/in-millis)))
+  ([^org.joda.time.DateTime t]
+   (millis-until t (time/now)))
+  ([^org.joda.time.DateTime t now]
+   (-> now
+       (time/interval t)
+       time/in-millis)))
 
 (defn wait-for
   "Sleep the present thread until the passed in date time arrives"
