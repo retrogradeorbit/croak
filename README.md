@@ -48,17 +48,10 @@ croak.probes.iptables> (clojure.pprint/pprint (iptables))
     :dest "0.0.0.0/0",
     :in "lxcbr0",
     :opt "--"}
-   {:pkts 0,
-    :extra "udp dpt:53",
-    :source "0.0.0.0/0",
-    :out "*",
-    :prot "udp",
-    :bytes 0,
-    :target :ACCEPT,
-    :dest "0.0.0.0/0",
-    :in "lxcbr0",
-    :opt "--"}
    ...
 nil
+
+croak.probes.iptables> ((juxt :bytes :pkts) (-> (iptables) :INPUT))
+[448731 1414]
 
 ```
