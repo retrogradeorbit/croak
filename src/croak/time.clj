@@ -3,14 +3,22 @@
             [clj-time.format :as format]
             [clj-time.coerce :as coerce]))
 
-(defn wait
+(defn sleep
+  [millis]
+  (Thread/sleep delay))
+
+(defn millis-until
+  "Number of milliseconds until a particular datetime arrives"
+  [^org.joda.time.DateTime t]
+  (let [start (time/now)]
+    (-> start
+        (time/interval t)
+        time/in-millis)))
+
+(defn wait-for
   "Sleep the present thread until the passed in date time arrives"
   [^org.joda.time.DateTime t]
-  (let [start (time/now)
-        delay (-> start
-                  (time/interval t)
-                  time/in-millis)]
-    (Thread/sleep delay)))
+  (-> t millis-until sleep))
 
 (defn next-aligned-time
   "given a delay in milliseconds, find out the exact time the next
