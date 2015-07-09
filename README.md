@@ -54,4 +54,24 @@ nil
 croak.probes.iptables> ((juxt :bytes :pkts) (-> (iptables) :INPUT))
 [448731 1414]
 
+croak.prober> (def f (future (prober
+                  {:delay 500
+                   :align-times true
+                   :debug true}
+                  )))
+#'croak.prober/f
+probe @ 2015-07-09T14:51:14.000Z
+probe @ 2015-07-09T14:51:14.500Z
+probe @ 2015-07-09T14:51:15.000Z
+probe @ 2015-07-09T14:51:15.500Z
+probe @ 2015-07-09T14:51:16.000Z
+probe @ 2015-07-09T14:51:16.501Z
+croak.prober> (future-cancel f)
+true
+
+croak.prober> (ns croak.core)
+nil
+croak.core> (count @=data=)
+9
+
 ```

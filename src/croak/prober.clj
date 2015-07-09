@@ -20,6 +20,9 @@
                    time/millis
                    (time/plus t))]
 
+        (when (-> config :debug)
+          (println "probe @" (str (time/now))))
+
         (swap! core/=data= assoc t
                (let [data (iptables)]
                  {:INPUT (-> data :INPUT :bytes)
@@ -31,7 +34,11 @@
 
 (comment
 
-  (def f (future (prober)))
+  (def f (future (prober
+                  {:delay 500
+                   :align-times true
+                   :debug true}
+                  )))
 
   (future-cancel f)
 
