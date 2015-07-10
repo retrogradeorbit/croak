@@ -21,7 +21,7 @@
                    (time/plus t))]
 
         (when (-> config :debug)
-          (println "probe @" (str (time/now))))
+          (println "probe @" (str t)))
 
         (swap! core/=data= assoc t
                (let [data (iptables)]
