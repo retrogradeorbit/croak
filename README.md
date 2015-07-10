@@ -66,7 +66,7 @@ probe @ 2015-07-09T14:51:14.500Z
 probe @ 2015-07-09T14:51:15.000Z
 probe @ 2015-07-09T14:51:15.500Z
 probe @ 2015-07-09T14:51:16.000Z
-probe @ 2015-07-09T14:51:16.501Z
+probe @ 2015-07-09T14:51:16.500Z
 croak.prober> (future-cancel f)
 true
 
