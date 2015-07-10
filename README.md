@@ -73,6 +73,6 @@ true
 croak.prober> (ns croak.core)
 nil
 croak.core> (count @=data=)
-9
+6
 
 ```
