@@ -5,6 +5,8 @@
             :url "http://www.gnu.org/licenses/gpl-3.0.en.html"}
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [clj-time "0.8.0"]
+                 [org.clojure/tools.cli "0.3.1"]
+                 [me.raynes/fs "1.4.6"]
                  ]
   :main ^:skip-aot croak.core
   :target-path "target/%s"
