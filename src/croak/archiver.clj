@@ -20,7 +20,9 @@
 
 
 (defn make-filename [timestamp]
-  (->> (str "data-" (format/unparse (format/formatter *time-format*) timestamp) ".edn")
+  (->> (str "data-" (-> *time-format*
+                        format/formatter
+                        (format/unparse timestamp)) ".edn")
        (io/file *image-storage-path*)))
 
 
@@ -36,7 +38,10 @@
                  (fs/list-dir *image-storage-path*)))
 
         fname-parse (fn [[ind fname]]
-                      [(format/parse (format/formatter *time-format*) ind) fname])]
+                      [(-> *time-format*
+                           format/formatter
+                           (format/parse ind))
+                       fname])]
     (into
      {}
      (map fname-parse items))))
