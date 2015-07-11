@@ -10,4 +10,4 @@
       (is
        (=
         (str (make-filename (time/date-time 1975 11 20 6 30 30 0)))
-        "/storage/data-1975-11-20-06:30:30.000.dat")))))
+        "/storage/data-1975-11-20-06:30:30.000.edn")))))
