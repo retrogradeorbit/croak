@@ -10,25 +10,12 @@
    ["-h" "--help"]])
 
 (defn testit []
-  (add-watch prober/=data= :archiver (archiver/archive-watcher {:archive-count 5
+  (add-watch prober/=data= :archiver (archiver/archive-watcher {:archive-count 5000
                                                                 :debug true}))
-
-  ;(iptables)
-  ;(assert false "WAT")
-  (def fff (future (prober/prober
-                    {:delay 5000
-                     :align-times true
-                     :debug true}
-                    )))
-
-  fff
-
-
-
-  #_ (comment
-    (future-cancel f)
-    )
-  )
+  (prober/prober
+      {:delay 500
+       :align-times true
+       :debug true}))
 
 
 (defn -main
