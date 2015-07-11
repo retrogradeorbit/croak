@@ -1,13 +1,13 @@
 (ns croak.archiver
-  (:require [clj-time.format :as format]
+  (:require [croak.prober :as prober]
+            [clj-time.format :as format]
             [me.raynes.fs :as fs]
             [clojure.java.io :as io]))
 
 
 (def ^:dynamic *image-storage-path* "/tmp/storage")
 
-(def time-formatter (format/formatter "yyyy-MM-dd HH:mm:ss.SSS"))
-
+(def ^:dynamic *time-format* "yyyy-MM-dd-HH:mm:ss.SSS")
 
 (defn init-storage!
   ([]
@@ -20,9 +20,8 @@
 
 
 (defn make-filename [timestamp]
-  (->> (str "data-" (format/parse time-formatter timestamp) ".dat")
+  (->> (str "data-" (format/unparse (format/formatter *time-format*) timestamp) ".dat")
        (io/file *image-storage-path*)))
-
 
 (defn get-filenames []
   (let [items
@@ -36,7 +35,7 @@
                  (fs/list-dir *image-storage-path*)))
 
         fname-parse (fn [[ind fname]]
-                      [(format/parse time-formatter ind) fname])]
+                      [(format/parse (format/formatter *time-format*) ind) fname])]
     (into
      {}
      (map fname-parse items))))
