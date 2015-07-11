@@ -1,9 +1,11 @@
 (ns croak.prober
-  (:require [croak.core :as core]
-            [croak.time :refer [wait-until next-aligned-time]]
+  (:require [croak.time :refer [wait-until next-aligned-time]]
             [clj-time.core :as time]
 
             [croak.probes.iptables :refer [iptables]]))
+
+;; the ram storage of the probers results
+(def =data= (atom {}))
 
 (defn prober
   "prober main loop"
@@ -23,7 +25,7 @@
         (when (-> config :debug)
           (println "probe @" (str t)))
 
-        (swap! core/=data= assoc t
+        (swap! =data= assoc t
                (let [data (iptables)]
                  {:INPUT (-> data :INPUT :bytes)
                   :OUTPUT (-> data :OUTPUT :bytes)}))
@@ -35,7 +37,7 @@
 (comment
 
   (def f (future (prober
-                  {:delay 500
+                  {:delay 5000
                    :align-times true
                    :debug true}
                   )))
