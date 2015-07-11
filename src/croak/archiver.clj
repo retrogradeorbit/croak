@@ -1,6 +1,7 @@
 (ns croak.archiver
   (:require [croak.prober :as prober]
             [clj-time.format :as format]
+            [clj-time.coerce :as coerce]
             [me.raynes.fs :as fs]
             [clojure.java.io :as io]))
 
@@ -46,14 +47,21 @@
      {}
      (map fname-parse items))))
 
+(defn data->disk
+  "preprocessor to prepare data before its written to disk. Turns
+  timestamps into longs to reduce the size of the edn file"
+  [data]
+  (into
+   {} (for [[k v] data] [(coerce/to-long k) v])))
 
 (defn archive-watcher
   "builds a watcher function that behaves according to the values in
   the hashmap `config`"
-  [{:keys [archive-count debug] :or {:archive-count 1000 :debug true}}]
-  ^{:doc "returns a future that runs a watcher for data func that regularly
-  writes it to file when size exceeds trigger. if the write succeeds
-  remove those entries from the atom."}
+  [{:keys [archive-count debug]
+    :or {:archive-count 1000 :debug  true}}]
+  ^{:doc "returns a future that runs a watcher for data func
+  that regularly writes it to file when size exceeds trigger. if the
+  write succeeds remove those entries from the atom."}
   (fn
     [key refr old n]
     (when (>= (count n) archive-count)
@@ -63,7 +71,7 @@
             ]
         (when debug (println "writing" archive-count "records to" (str filename)))
         (future
-          (spit filename  (prn-str to-write))
+          (spit filename  (prn-str (data->disk to-write)))
           (swap! refr
                  (fn [data]
                    ;; remove all the writen timestamps from atom
