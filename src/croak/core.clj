@@ -29,7 +29,7 @@
 (defn add-shutdown-hook []
   (.addShutdownHook
    (Runtime/getRuntime)
-   (Thread. (fn [] (shutdown-hook)))))
+   (Thread. shutdown-hook)))
 
 
 (defn -main
