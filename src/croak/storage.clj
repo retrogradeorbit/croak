@@ -5,8 +5,8 @@
             [clj-time.coerce :as coerce]))
 
 (def ^:dynamic *image-storage-path* "/tmp/storage")
-
 (def ^:dynamic *time-format* "yyyy-MM-dd-HH:mm:ss.SSS")
+(def ^:dynamic *time-re* #"data-(\d+\-\d+\-\d+ \d+:\d+:\d+\.\d+Z).edn")
 
 (defn data->disk
   "preprocessor to prepare data before its written to disk. Turns
@@ -36,7 +36,7 @@
                 (map
                  #(->> %
                        str
-                       (re-seq #"data-(\d+\-\d+\-\d+ \d+:\d+:\d+\.\d+Z).edn")
+                       (re-seq *time-re*)
                        first
                        reverse)
                  (fs/list-dir *image-storage-path*)))
