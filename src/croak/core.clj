@@ -11,12 +11,13 @@
    ["-h" "--help"]])
 
 (defn testit []
-  (add-watch prober/=data= :archiver (archiver/archive-watcher {:archive-count 1000
-                                                                :debug true}))
+  (add-watch prober/=data= :archiver
+             (archiver/archive-watcher {:archive-count 1000
+                                        :debug true}))
   (prober/prober
-      {:delay 500
-       :align-times true
-       :debug true}))
+   {:delay 500
+    :align-times true
+    :debug true}))
 
 
 (defn shutdown-hook []
@@ -40,5 +41,4 @@
   (try (deref (testit))
        (finally
          ;; http://dev.clojure.org/jira/browse/CLJ-959
-         (shutdown-agents)
-         )))
+         (shutdown-agents))))
