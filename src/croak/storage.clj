@@ -1,11 +1,19 @@
 (ns croak.storage
   (:require [me.raynes.fs :as fs]
             [clojure.java.io :as io]
-            [clj-time.format :as format]))
+            [clj-time.format :as format]
+            [clj-time.coerce :as coerce]))
 
 (def ^:dynamic *image-storage-path* "/tmp/storage")
 
 (def ^:dynamic *time-format* "yyyy-MM-dd-HH:mm:ss.SSS")
+
+(defn data->disk
+  "preprocessor to prepare data before its written to disk. Turns
+  timestamps into longs to reduce the size of the edn file"
+  [data]
+  (into
+   {} (for [[k v] data] [(coerce/to-long k) v])))
 
 (defn init-storage!
   ([]

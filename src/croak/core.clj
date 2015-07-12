@@ -2,7 +2,8 @@
   (:require [clojure.tools.cli :refer [parse-opts]]
             [croak.prober :as prober]
             [croak.probes.iptables :refer [iptables]]
-            [croak.archiver :as archiver])
+            [croak.archiver :as archiver]
+            [croak.storage :as storage])
   (:gen-class))
 
 (def cli-options
@@ -23,9 +24,9 @@
 (defn shutdown-hook []
   (let [to-write @prober/=data=
         timestamps (keys to-write)
-        filename (archiver/make-filename (first timestamps))]
+        filename (storage/make-filename (first timestamps))]
     (println "writing" (count to-write) "records to" (str filename))
-    (spit filename  (prn-str (archiver/data->disk to-write)))))
+    (spit filename  (prn-str (storage/data->disk to-write)))))
 
 
 (defn add-shutdown-hook []

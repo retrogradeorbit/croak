@@ -1,15 +1,6 @@
 (ns croak.archiver
   (:require [croak.prober :as prober]
-            [croak.storage :as storage]
-            [clj-time.coerce :as coerce]
-            ))
-
-(defn data->disk
-  "preprocessor to prepare data before its written to disk. Turns
-  timestamps into longs to reduce the size of the edn file"
-  [data]
-  (into
-   {} (for [[k v] data] [(coerce/to-long k) v])))
+            [croak.storage :as storage]))
 
 (defn archive-watcher
   "builds a watcher function that behaves according to the values in
@@ -28,7 +19,7 @@
             ]
         (when debug (println "writing" archive-count "records to" (str filename)))
         (future
-          (spit filename  (prn-str (data->disk to-write)))
+          (spit filename  (prn-str (storage/data->disk to-write)))
           (swap! refr
                  (fn [data]
                    ;; remove all the writen timestamps from atom
