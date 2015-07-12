@@ -1,6 +1,7 @@
 (ns croak.core
   (:require [clojure.tools.cli :refer [parse-opts]]
             [croak.prober :as prober]
+            [croak.probes.iptables :refer [iptables]]
             [croak.archiver :as archiver])
   (:gen-class))
 

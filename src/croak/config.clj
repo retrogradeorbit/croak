@@ -1,38 +1,51 @@
 (ns croak.config)
 
-(def config
-  {:prober
+
+(def default-config
+  {
+   :prober
    {
-    ;; job name
-    :firewall
-    {
-     ;; how often to probe
-     :delay 500
+    ;; millisecs
+    :delay 500
 
-     ;; if true, always start with a small initial delay so
-     ;; all the time stamps from different runs line up on
-     ;; exact intervals
-     :align-times true
+    ;; if true, always start with a small initial delay so
+    ;; all the time stamps from different runs line up on
+    ;; exact intervals
+    :align-times true
 
-     ;; use sudo for root access
-     :use [:sudo]
-
-     ;; the probe module
-     :module :iptables
-
-     ;; a filter function to pre-process the data
-     ;;:filter [[:INPUT :bytes] [:OUTPUT :bytes]]
-     }
+    ;; print what you're doing
+    :debug true
     }
 
    :archiver
    {
-    ;; run every 60 seconds
-    :delay 60000
-    :align-times true
+    ;; put the files here
+    :storage "/tmp/storage"
 
-    :archive-directory "/var/cache/croak"
+    ;; how many records to store per file
+    :count 1000
 
-    ;; size that triggers the archiver
-    :trigger 5000
-    }})
+    ;; print what you're doing
+    :debug true
+    }
+
+   :reporter
+   {
+    :ping ["localhost.localdomain" 3128]
+    :post "http://localhost.localdomain:3128/machine-name/"
+    }
+   }
+  )
+
+
+(def config-paths
+  ["~/.croak.clj"
+   "~/.croak/config.clj"
+   "/usr/local/etc/croak.clj"
+   "/usr/local/etc/croak/cronfig.clj"])
+
+
+(defn read-config
+  []
+
+  )
