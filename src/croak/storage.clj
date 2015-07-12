@@ -51,5 +51,5 @@
      {}
      (map fname-parse items))))
 
-(defn load-file [filename]
+(defn load-edn [filename]
   (edn/read-string (slurp (io/file *image-storage-path* filename))))

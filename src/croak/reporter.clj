@@ -5,8 +5,14 @@
 
 (def ^:dynamic *base-opts*
   {
-   :timeout 200
-   :user-agent "Croak-1"})
+   :timeout 4000
+   :user-agent "Croak/0.1"})
+
+(defn send-data [data opts]
+  (let [d (assoc (into *base-opts* opts)
+                 :query-params {:data (prn-str data)}
+                 )]
+    (http/request d)))
 
 (defn reporter
   "reporter mainline function"
@@ -16,14 +22,7 @@
 
     ;; upload any files first
     (let [[time filename] (first (sort (storage/get-filenames)))]
-      (println "=====" filename)
-      (println (storage/load-file filename)))
-
-
-
-    ;; machine
-    #_ (http/request (assoc (into *base-opts* request-opts)
-                         :query-params ["data" "..."]))
-    )
-
-  )
+      (println @(-> filename
+                     storage/load-edn
+                     (send-data {:url "http://localhost"
+                                 :method :post}))))))
