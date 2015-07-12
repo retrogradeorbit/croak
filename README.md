@@ -1,5 +1,5 @@
 # croak
-A remote host health monitoring and reporting application
+A remote host health monitoring and reporting application.
 
 ## Overview
 
@@ -25,6 +25,17 @@ using some method, like an HTTP POST, or a series of UDP packets. It
 may use multiple methods and multiple hosts. When the information
 has been reliably transfered to all recipients, it is removed from
 disk/memory.
+
+Croak is written in clojure and can be used as a stand-alone
+application or as a library in another clojure programme.
+
+## Running
+
+When running under leiningen use the trampoline.
+
+```bash
+$ lein trampoline run
+```
 
 ## Scratchpad
 
