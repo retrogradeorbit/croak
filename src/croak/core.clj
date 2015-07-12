@@ -3,7 +3,8 @@
             [croak.prober :as prober]
             [croak.probes.iptables :refer [iptables]]
             [croak.archiver :as archiver]
-            [croak.storage :as storage])
+            [croak.storage :as storage]
+            [croak.reporter :as reporter])
   (:gen-class))
 
 (def cli-options
@@ -37,6 +38,7 @@
 
 (defn -main
   [& args]
+  (reporter/reporter {})
   (add-shutdown-hook)
   (println (parse-opts args cli-options))
   (try (deref (testit))

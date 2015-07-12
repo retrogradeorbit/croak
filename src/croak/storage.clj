@@ -2,11 +2,12 @@
   (:require [me.raynes.fs :as fs]
             [clojure.java.io :as io]
             [clj-time.format :as format]
-            [clj-time.coerce :as coerce]))
+            [clj-time.coerce :as coerce]
+            [clojure.edn :as edn]))
 
 (def ^:dynamic *image-storage-path* "/tmp/storage")
 (def ^:dynamic *time-format* "yyyy-MM-dd-HH:mm:ss.SSS")
-(def ^:dynamic *time-re* #"data-(\d+\-\d+\-\d+ \d+:\d+:\d+\.\d+Z).edn")
+(def ^:dynamic *time-re* #"data-(\d+\-\d+\-\d+-\d+:\d+:\d+\.\d+).edn")
 
 (defn data->disk
   "preprocessor to prepare data before its written to disk. Turns
@@ -49,3 +50,6 @@
     (into
      {}
      (map fname-parse items))))
+
+(defn load-file [filename]
+  (edn/read-string (slurp (io/file *image-storage-path* filename))))
