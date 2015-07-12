@@ -1,51 +1,8 @@
 (ns croak.archiver
   (:require [croak.prober :as prober]
-            [clj-time.format :as format]
+            [croak.storage :as storage]
             [clj-time.coerce :as coerce]
-            [me.raynes.fs :as fs]
-            [clojure.java.io :as io]))
-
-
-(def ^:dynamic *image-storage-path* "/tmp/storage")
-
-(def ^:dynamic *time-format* "yyyy-MM-dd-HH:mm:ss.SSS")
-
-(defn init-storage!
-  ([]
-   (init-storage! *image-storage-path*))
-  ([path]
-   (when-not (fs/exists? path)
-     (when-not (fs/mkdir path)
-       (throw (ex-info (str "Can't create storage path:" path)
-                       {:type ::fs-exception}))))))
-
-
-(defn make-filename [timestamp]
-  (->> (str "data-" (-> *time-format*
-                        format/formatter
-                        (format/unparse timestamp)) ".edn")
-       (io/file *image-storage-path*)))
-
-
-(defn get-filenames []
-  (let [items
-        (filter seq
-                (map
-                 #(->> %
-                       str
-                       (re-seq #"data-(\d+\-\d+\-\d+ \d+:\d+:\d+\.\d+Z).edn")
-                       first
-                       reverse)
-                 (fs/list-dir *image-storage-path*)))
-
-        fname-parse (fn [[ind fname]]
-                      [(-> *time-format*
-                           format/formatter
-                           (format/parse ind))
-                       fname])]
-    (into
-     {}
-     (map fname-parse items))))
+            ))
 
 (defn data->disk
   "preprocessor to prepare data before its written to disk. Turns
@@ -67,7 +24,7 @@
     (when (>= (count n) archive-count)
       (let [timestamps (->> n keys sort (take archive-count))
             to-write (into {} (for [t timestamps] [t (n t)]))
-            filename (make-filename (first timestamps))
+            filename (storage/make-filename (first timestamps))
             ]
         (when debug (println "writing" archive-count "records to" (str filename)))
         (future

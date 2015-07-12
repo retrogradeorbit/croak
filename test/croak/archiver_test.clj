@@ -1,12 +1,12 @@
-(ns croak.archiver-test
+(ns croak.storage-test
   (:require [clojure.test :refer :all]
-            [croak.archiver :refer :all]
+            [croak.storage :refer :all]
             [clj-time.core :as time]))
 
 (deftest test-make-filename
   (testing "make-filename creates a correctly formatted filename"
-    (binding [croak.archiver/*image-storage-path* "/storage/"
-              croak.archiver/*time-format* "yyyy-MM-dd-HH:mm:ss.SSS"]
+    (binding [croak.storage/*image-storage-path* "/storage/"
+              croak.storage/*time-format* "yyyy-MM-dd-HH:mm:ss.SSS"]
       (is
        (=
         (str (make-filename (time/date-time 1975 11 20 6 30 30 0)))
