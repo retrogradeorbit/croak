@@ -31,8 +31,16 @@
 
    :reporter
    {
-    :ping ["localhost.localdomain" 3128]
-    :post "http://localhost.localdomain:3128/machine-name/"
+    ;; http-kit options
+    :opts
+    {
+     :method :post
+     :url "http://localhost.localdomain:3128/machine-name/"
+     :basic-auth ["user" "pass"]
+     }
+
+    ;; how to send the data
+    :encoding :json
     }
    }
   )
