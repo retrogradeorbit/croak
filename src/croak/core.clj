@@ -17,7 +17,7 @@
              (archiver/archive-watcher {:archive-count 1000
                                         :debug true}))
   (prober/prober
-   {:delay 500
+   {:delay 1000
     :align-times true
     :debug true}))
 
