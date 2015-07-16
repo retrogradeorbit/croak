@@ -38,7 +38,14 @@
 
 (defn -main
   [& args]
-  (reporter/reporter {})
+  (reporter/reporter
+   {
+    :opts
+    {
+     :method :post
+     :url "http://localhost:5000/data"
+     }
+    })
   (add-shutdown-hook)
   (println (parse-opts args cli-options))
   (try (deref (testit))
