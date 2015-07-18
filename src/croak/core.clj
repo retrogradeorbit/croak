@@ -12,14 +12,13 @@
     :default nil]
    ["-h" "--help"]])
 
-(defn testit []
+(defn run-probes [probes]
   (add-watch prober/=data= :archiver
              (archiver/archive-watcher {:archive-count 1000
                                         :debug true}))
-  (prober/prober
-   {:delay 1000
-    :align-times true
-    :debug true}))
+  (map #(future (prober/prober %))
+       probes))
+
 
 
 (defn shutdown-hook []
@@ -38,18 +37,21 @@
 
 (defn -main
   [& args]
-  (future
-    (reporter/reporter
-     {
-      :opts
-      {
-       :method :post
-       :url "http://localhost:5000/data"
-       }
-      }))
-  (add-shutdown-hook)
-  (println (parse-opts args cli-options))
-  (try (deref (testit))
-       (finally
-         ;; http://dev.clojure.org/jira/browse/CLJ-959
-         (shutdown-agents))))
+  (let [{:keys [options arguments errors summary]}
+        (parse-opts args cli-options)]
+    (cond (:help options) (println summary)
+          (:config options)
+          (let [config-file (:config options)
+                conf-data (slurp config-file)
+                config (read-string conf-data)]
+
+            (add-shutdown-hook)
+
+            ;; start up reporter
+            (future
+              (reporter/reporter (:reporter config)))
+
+            (try (doall (map deref (run-probes (:probes config))))
+                 (finally
+                   ;; http://dev.clojure.org/jira/browse/CLJ-959
+                   (shutdown-agents)))))))
