@@ -2,33 +2,44 @@
   (:require [croak.time :refer [wait-until next-aligned-time]]
             [clj-time.core :as time]
 
-            [croak.probes.iptables :refer [iptables]]))
+            [croak.probes.iptables :refer [iptables]]
+            [croak.probes.meminfo :refer [meminfo]]))
 
 ;; the ram storage of the probers results
 (def =data= (atom {}))
 
+(def probes
+  {:iptables
+   (fn [] (let [data (iptables)]
+            {:INPUT (-> data :INPUT :bytes)
+             :OUTPUT (-> data :OUTPUT :bytes)}))
+   :meminfo
+   meminfo
+   })
+
 (defn prober
   "prober main loop"
-  [config]
-  (let [step (-> config :delay)
-        align-times (-> config :align-times)
-        next-tick (if align-times
-                    (next-aligned-time step)
-                    (time/now))]
+  [{:keys [delay align-times probe]
+    :as config}]
+  (let [   next-tick (if align-times
+                       (next-aligned-time delay)
+                       (time/now))]
     (when align-times (wait-until next-tick))
 
     (loop [t next-tick]
-      (let [n (->> step
+      (let [n (->> delay
                    time/millis
                    (time/plus t))]
 
         (when (-> config :debug)
-          (println "probe @" (str t)))
+          (println "probe" (:probe config) ":" (str t)))
 
-        (swap! =data= assoc t
-               (let [data (iptables)]
-                 {:INPUT (-> data :INPUT :bytes)
-                  :OUTPUT (-> data :OUTPUT :bytes)}))
+        (swap! =data=
+               (fn [data]
+                 (assoc data t
+                        (assoc
+                         (get data t {})
+                         probe ((probe probes))))))
 
         (wait-until n)
         (recur n)))))
@@ -37,9 +48,14 @@
 (comment
 
   (def f (future (prober
-                  {:delay 5000
+
+                  {
+                   :probe :iptables
+                   :delay 1000
                    :align-times true
                    :debug true}
+
+
                   )))
 
   (future-cancel f)
