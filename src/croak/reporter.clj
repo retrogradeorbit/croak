@@ -49,11 +49,13 @@
 (defn reporter
   "reporter mainline function"
   [{:keys [minimum-set minimum-send]
-    :or {:minimum-set 3
-         :minimum-send 10
+    :or {minimum-set 3
+         minimum-send 10
          }
     :as config}]
   (println "reporter :" (sort (storage/get-filenames)))
+  (println "minimum-set" minimum-set)
+  (println "minimum-send" minimum-send)
 
     ;; upload all files, oldest to newest
 
@@ -74,8 +76,10 @@
     (println "num" num)
     (when (>= num (+ minimum-send minimum-set))
       ;; upload all leave minimum-set behind
-      (let [report-count (- num (minimum-set))
+      (println "upload")
+      (let [report-count (- num minimum-set)
             timestamps (->> data keys sort (take report-count))
+            _ (println "!" timestamps)
             to-report (into {} (for [t timestamps] [t (data t)]))]
         (println "rc:" report-count)
         (upload-data to-report))))
