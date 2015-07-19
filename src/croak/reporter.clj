@@ -64,12 +64,17 @@
   (loop [remaining (sort (storage/get-filenames))]
                                         ;(wait-until-up "localhost.localdomain")
 
+    (println "." (first remaining))
     ;; upload any files first
-    (if-let [[time filename] (first remaining)]
-      (upload-file filename))
+    (if-let [time-file (first remaining)]
+      (if (upload-file (second time-file))
+        ;; upload success
+        (when (seq (rest remaining))
+          (recur (rest remaining)))
 
-    (when (seq (rest remaining))
-      (recur (rest remaining))))
+        ;; upload again
+        (do (Thread/sleep 7000)
+            (recur remaining)))))
 
     ;; if no more files, try uploading memory
 
