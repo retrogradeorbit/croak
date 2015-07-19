@@ -27,13 +27,15 @@
 
 (defn upload-file [filename]
   (println "loading" filename)
-  (when (= 200 (-> filename
+  (if (= 200 (-> filename
                    storage/load-edn
+                   ;println
                    (send-data {:url "http://localhost:5000/data"
                                :method :post})))
-    (println "deleting" filename)
-    (io/delete-file (str "/tmp/storage/" filename)))
-  )
+    (do (println "deleting" filename)
+        (io/delete-file (str "/tmp/storage/" filename))
+        true)
+    false))
 
 (defn upload-data [data]
   (println "uploading ram" (count data))
