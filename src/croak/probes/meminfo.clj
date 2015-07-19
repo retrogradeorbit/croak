@@ -10,7 +10,7 @@
        (string/join "-")))
 
 (defn meminfo-line [[k v]]
-  [(keyword k) (read-string v)])
+  [(keyword (string/replace k #"[\(\)]" "_")) (read-string v)])
 
 (defn meminfo []
   (into {} (map
