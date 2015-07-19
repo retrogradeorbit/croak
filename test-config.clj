@@ -30,7 +30,7 @@
   :opts
   {
    :method :post
-   :url "http://localhost5000/data"
+   :url "http://localhost:5000/data"
    }
 
   }
