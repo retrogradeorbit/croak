@@ -19,7 +19,7 @@
 
 (defn prober
   "prober main loop"
-  [{:keys [delay align-times probe]
+  [{:keys [delay align-times probe debug]
     :as config}]
   (let [   next-tick (if align-times
                        (next-aligned-time delay)
@@ -31,8 +31,8 @@
                    time/millis
                    (time/plus t))]
 
-        (when (-> config :debug)
-          (println "probe" (:probe config) ":" (str t)))
+        (when debug
+          (println "probe" probe ":" (str t)))
 
         (swap! =data=
                (fn [data]
@@ -43,21 +43,3 @@
 
         (wait-until n)
         (recur n)))))
-
-
-(comment
-
-  (def f (future (prober
-
-                  {
-                   :probe :iptables
-                   :delay 1000
-                   :align-times true
-                   :debug true}
-
-
-                  )))
-
-  (future-cancel f)
-
-)
