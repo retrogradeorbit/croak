@@ -90,5 +90,11 @@ Chain POSTROUTING (policy ACCEPT 103K packets, 10M bytes)
         (shell/sh "sudo" "-n"
                   "iptables" "-L" "-n" "-x" "-v")]
     (assert (not= exit 1) "'sudo iptables' exited non-zero. Have you setup sudo so this user can run iptables as root with no password?")
-    (assert (= exit 0) "'sudo iptables' exited non-zero. Looks like the sudo part worked and the iptables failed.")
+    (assert (= exit 0)
+            (str
+             "'sudo iptables' exited non-zero. Looks like the sudo part worked and the iptables failed."
+             " Exit: " exit
+             " Out: " out
+             " Err: " err
+           ))
     (iptables-sections out)))
