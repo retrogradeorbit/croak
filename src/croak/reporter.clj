@@ -20,30 +20,31 @@
                  )
         {:keys [status headers body error] :as resp}
         @(http/request d)]
-    (if error
+    (when error
       (println "Failed, exception: " error)
-      (println "HTTP success: " status))
+      ;(println "HTTP success: " status)
+      )
     status))
 
 (defn upload-file [filename]
-  (println "loading" filename)
+  ;(println "loading" filename)
   (if (= 200 (-> filename
                    storage/load-edn
                    ;println
                    (send-data {:url "http://localhost:5000/data"
                                :method :post})))
-    (do (println "deleting" filename)
+    (do ;(println "deleting" filename)
         (io/delete-file (str "/tmp/storage/" filename))
         true)
     false))
 
 (defn upload-data [data]
-  (println "uploading ram" (count data))
+  ;(println "uploading ram" (count data))
   (when (= 200 (-> data
                    storage/data->disk
                    (send-data {:url "http://localhost:5000/data"
                                :method :post})))
-    (println "cleaning ram of" (count data))
+    ;(println "cleaning ram of" (count data))
     (swap! prober/=data=
            (fn [d]
              (apply dissoc d (keys data))))))
@@ -55,16 +56,16 @@
          minimum-send 10
          }
     :as config}]
-  (println "reporter :" (sort (storage/get-filenames)))
-  (println "minimum-set" minimum-set)
-  (println "minimum-send" minimum-send)
+  ;; (println "reporter :" (sort (storage/get-filenames)))
+  ;; (println "minimum-set" minimum-set)
+  ;; (println "minimum-send" minimum-send)
 
     ;; upload all files, oldest to newest
 
   (loop [remaining (sort (storage/get-filenames))]
                                         ;(wait-until-up "localhost.localdomain")
 
-    (println "." (first remaining))
+    ;(println "." (first remaining))
     ;; upload any files first
     (if-let [time-file (first remaining)]
       (if (upload-file (second time-file))
@@ -80,15 +81,15 @@
 
   (let [data @prober/=data=
         num (count data)]
-    (println "num" num)
+    ;(println "num" num)
     (when (>= num (+ minimum-send minimum-set))
       ;; upload all leave minimum-set behind
-      (println "upload")
+      ;(println "upload")
       (let [report-count (- num minimum-set)
             timestamps (->> data keys sort (take report-count))
-            _ (println "!" timestamps)
+            ;_ (println "!" timestamps)
             to-report (into {} (for [t timestamps] [t (data t)]))]
-        (println "rc:" report-count)
+        ;(println "rc:" report-count)
         (upload-data to-report))))
 
   (Thread/sleep 10000)

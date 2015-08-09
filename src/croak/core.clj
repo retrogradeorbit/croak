@@ -25,7 +25,7 @@
   (let [to-write @prober/=data=
         timestamps (keys to-write)
         filename (storage/make-filename (first timestamps))]
-    (println "writing" (count to-write) "records to" (str filename))
+    ;(println "writing" (count to-write) "records to" (str filename))
     (spit filename  (prn-str (storage/data->disk to-write)))))
 
 
