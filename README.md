@@ -135,3 +135,9 @@ croak.core> (count @=data=)
 6
 
 ```
+
+## License
+
+Copyright (c) 2015 Crispin Wellington
+
+Distributed under the Eclipse Public License either version 1.0
