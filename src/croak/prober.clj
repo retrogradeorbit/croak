@@ -21,9 +21,9 @@
   "prober main loop"
   [{:keys [delay align-times probe debug]
     :as config}]
-  (let [   next-tick (if align-times
-                       (next-aligned-time delay)
-                       (time/now))]
+  (let [next-tick (if align-times
+                    (next-aligned-time delay)
+                    (time/now))]
     (when align-times (wait-until next-tick))
 
     (loop [t next-tick]
