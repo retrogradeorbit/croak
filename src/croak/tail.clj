@@ -8,10 +8,10 @@
       (recur file 0)
       (if (> len pos)
         ;;file has lengthened
-        (let [fh (doto
-                     (RandomAccessFile file "r")
-                   (.seek pos))]
+        (let [fh (RandomAccessFile file "r")]
           (try
+            (.seek fh pos)
+
             ;; return the new pos, and the lines read
             [(.getFilePointer fh) (loop [lines []]
                                     (if-let [line (.readLine fh)]
