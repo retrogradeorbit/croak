@@ -14,10 +14,13 @@
           (try
             (.seek fh pos)
 
-            ;; return the new pos, and the lines read
-            [(.getFilePointer fh) (loop [lines []]
-                                    (if-let [line (.readLine fh)]
-                                      (recur (conj lines line))
-                                      lines))]
+            (let [lines-read (loop [lines []]
+                               (if-let [line (.readLine fh)]
+                                 (recur (conj lines line))
+                                 lines))]
 
-            (finally (.close fh))))))))
+              ;; return the new pos, and the lines read
+              [(.getFilePointer fh) lines-read])
+
+            (finally (.close fh))))
+
