@@ -1,4 +1,6 @@
-(ns croak.tail)
+(ns croak.tail
+  (:require [clojure.java.io :as io])
+  (:import [java.io RandomAccessFile]))
 
 
 (defn process-tail [file pos]
