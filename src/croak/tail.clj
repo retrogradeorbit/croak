@@ -27,3 +27,10 @@
         ;; file hasn't changed
         [pos []]))))
 
+(defn test-tail-f [filename]
+  (let [file (io/file filename)]
+    (loop [pos (.length file)]
+      (let [[pos lines] (process-tail file pos)]
+        (println (prn-str lines))
+        (Thread/sleep 1000)
+        (recur pos)))))
