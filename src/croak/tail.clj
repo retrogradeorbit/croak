@@ -24,3 +24,6 @@
 
             (finally (.close fh))))
 
+        ;; file hasn't changed
+        [pos []]))))
+
