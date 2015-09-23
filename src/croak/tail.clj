@@ -8,9 +8,9 @@
     (if (< flen pos)
       ;; file has shortened
       (recur file 0)
-      (if (> len pos)
+      (if (> flen pos)
         ;;file has lengthened
-        (let [fh (RandomAccessFile file "r")]
+        (let [fh (RandomAccessFile. file "r")]
           (try
             (.seek fh pos)
 
