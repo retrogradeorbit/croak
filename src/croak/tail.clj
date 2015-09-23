@@ -34,3 +34,7 @@
         (println (prn-str lines))
         (Thread/sleep 1000)
         (recur pos)))))
+
+(def fut (future (test-tail-f "/var/log/syslog")))
+
+(future-cancel fut)
