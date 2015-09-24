@@ -45,6 +45,21 @@
             (>! c lines)
             (recur pos)))))
     c))
+
+
+(def c (tail-chan "/var/log/syslog"))
+
+;(take! c (comp println prn-str))
+
+(def thr (future
+           (loop []
+             (let [lines (<!! c)]
+               (println (prn-str lines)))
+             (Thread/sleep 1000)
+             (recur))))
+
+(future-cancel thr)
+
 (def fut (future (test-tail-f "/var/log/syslog")))
 
 (future-cancel fut)
