@@ -1,5 +1,6 @@
 (ns croak.tail
-  (:require [clojure.java.io :as io])
+  (:require [clojure.java.io :as io]
+            [clojure.core.async :refer [chan go <! >! take! <!! thread]])
   (:import [java.io RandomAccessFile]))
 
 
@@ -35,6 +36,15 @@
         (Thread/sleep 1000)
         (recur pos)))))
 
+(defn tail-chan [filename]
+  (let [c (chan)]
+    (go
+      (let [file (io/file filename)]
+        (loop [pos (.length file)]
+          (let [[pos lines] (process-tail file pos)]
+            (>! c lines)
+            (recur pos)))))
+    c))
 (def fut (future (test-tail-f "/var/log/syslog")))
 
 (future-cancel fut)
