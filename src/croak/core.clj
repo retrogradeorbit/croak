@@ -4,6 +4,7 @@
             [croak.probes.iptables :refer [iptables]]
             [croak.archiver :as archiver]
             [croak.storage :as storage]
+            [croak.tail :as tail]
             [croak.reporter :as reporter])
   (:gen-class))
 
@@ -16,6 +17,9 @@
   (map #(future (prober/prober %))
        probes))
 
+(defn run-tails [tails]
+  (map #(future (tail/tailer %))
+       tails))
 
 
 (defn shutdown-hook []
