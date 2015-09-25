@@ -13,9 +13,6 @@
    ["-h" "--help"]])
 
 (defn run-probes [probes]
-  (add-watch prober/=data= :archiver
-             (archiver/archive-watcher {:archive-count 1000
-                                        :debug true}))
   (map #(future (prober/prober %))
        probes))
 
@@ -55,3 +52,7 @@
                  (finally
                    ;; http://dev.clojure.org/jira/browse/CLJ-959
                    (shutdown-agents)))))))
+            ;; setup the archiver (to disk) watch on the atom
+            (add-watch prober/=data= :archiver
+             (archiver/archive-watcher {:archive-count 1000
+                                        :debug true}))
