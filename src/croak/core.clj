@@ -48,15 +48,20 @@
 
             (add-shutdown-hook)
 
-            ;; start up reporter
+            ;; start up reporter. this sends the data to the server
             (future
               (reporter/reporter (:reporter config)))
 
-            (try (doall (map deref (run-probes (:probes config))))
-                 (finally
-                   ;; http://dev.clojure.org/jira/browse/CLJ-959
-                   (shutdown-agents)))))))
             ;; setup the archiver (to disk) watch on the atom
             (add-watch prober/=data= :archiver
              (archiver/archive-watcher {:archive-count 1000
                                         :debug true}))
+
+            (try
+              (let [probes (run-probes (:probes config))
+                    tails (run-tails (:tails config))]
+
+                (doall (map deref (concat probes tails))))
+              (finally
+                ;; http://dev.clojure.org/jira/browse/CLJ-959
+                (shutdown-agents)))))))
