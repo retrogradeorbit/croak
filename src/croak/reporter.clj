@@ -4,7 +4,7 @@
             [croak.prober :as prober]
             [clojure.data.json :as json]
             [clojure.java.io :as io])
-)
+  (:import [java.net InetAddress]))
 
 (def ^:dynamic *base-opts*
   {
