@@ -50,7 +50,11 @@
 
             ;; start up reporter. this sends the data to the server
             (future
-              (reporter/reporter (:reporter config)))
+              (try
+                (reporter/reporter (:reporter config))
+                (catch Exception e
+                  (println "Reporter has exited with following exception:")
+                  (clojure.stacktrace/print-stack-trace e))))
 
             ;; setup the archiver (to disk) watch on the atom
             (add-watch prober/=data= :archiver
