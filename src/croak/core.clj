@@ -62,10 +62,14 @@
                                         :debug true}))
 
             (try
-              (let [probes (run-probes (:probes config))
-                    tails (run-tails (:tails config))]
+                (let [probes (run-probes (:probes config))
+                      tails (run-tails (:tails config))]
 
-                (doall (map deref (concat probes tails))))
-              (finally
-                ;; http://dev.clojure.org/jira/browse/CLJ-959
-                (shutdown-agents)))))))
+                  (doall (map deref (concat probes tails))))
+                (finally
+                  ;; http://dev.clojure.org/jira/browse/CLJ-959
+                  (shutdown-agents)))
+
+
+
+))))
